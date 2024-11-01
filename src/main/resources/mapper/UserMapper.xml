@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.spring.exercise.mapper.UserMapper">
+
+
+    <insert id="insert">
+        insert into t_user(name,sex,phone,age,email,brith,password,balance)
+        values (#{name},#{sex},#{phone},#{age},#{email},#{brith},#{password},#{balance})
+    </insert>
+
+    <update id="update">
+        UPDATE t_user
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="age != null"> <!-- 假设age是Integer类型 -->
+                age = #{age},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="brith != null"> <!-- 假设brith是Date类型 -->
+                brith = #{brith},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="balance != null"> <!-- 假设balance是数值类型，如BigDecimal -->
+                balance = #{balance},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultType="com.atguigu.spring.exercise.bean.User">
+        select * from t_user where id = #{id}
+    </select>
+
+    <resultMap id="UserOrders" type="com.atguigu.spring.exercise.vo.req.UserVo">
+        <id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="phone" property="phone"/>
+        <result column="age" property="age"/>
+        <result column="email" property="email"/>
+        <result column="brith" property="brith"/>
+        <result column="password" property="password"/>
+        <result column="balance" property="balance"/>
+        <collection property="orders" ofType="com.atguigu.spring.exercise.vo.resp.OrderRespVo" >
+                <id column="order_id" property="id"/>
+                <result column="address" property="address"/>
+                <result column="total_price" property="totalPrice"/>
+                <result column="user_id" property="userId"/>
+                <result column="goods_id" property="goodsId"/>
+                <result column="count" property="count"/>
+                <result column="create_time" property="createTime"/>
+                <result column="is_delete" property="isDelete"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="selectByIdWithOrder" resultMap="UserOrders">
+        select
+            u.*, o.id as order_id, o.address, o.total_price,o.goods_id,o.count,o.create_time,o.user_id,o.is_delete
+        from t_user u
+                left join t_order o on u.id = o.user_id
+        where u.id = #{id}  and o.is_delete = 0
+    </select>
+
+
+    <select id="selectAll" resultType="com.atguigu.spring.exercise.bean.User">
+        select * from t_user
+    </select>
+</mapper>

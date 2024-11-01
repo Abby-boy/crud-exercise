@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.spring.exercise.mapper.OrderMapper">
+
+
+    <insert id="addOrder">
+        INSERT INTO t_order (address, user_id, goods_id, count,create_time, total_price,is_delete)
+        VALUES (#{address}, #{userId}, #{goodsId}, #{count},NOW(), #{totalPrice},0)
+    </insert>
+
+    <!-- 软删除 -->
+    <update id="deleteOrder" parameterType="java.lang.Long">
+        update t_order
+        set is_delete = 1
+        where id = #{id}
+    </update>
+
+    <select id="selectAll" resultType="com.atguigu.spring.exercise.vo.resp.OrderRespVo">
+        select * from t_order where is_delete = 0
+    </select>
+
+    <select id="selectById" resultType="com.atguigu.spring.exercise.vo.resp.OrderRespVo">
+        select * from t_order where id = #{id}
+    </select>
+</mapper>
