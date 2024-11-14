@@ -43,6 +43,7 @@ public class OrderController {
     @Operation(summary = "查询所有订单")
     public List<OrderRespVo> getAllOrders() {
         List<OrderRespVo> vos = orderService.allOrder();
+        int a = 10/ 0;
         return vos;
     }
 

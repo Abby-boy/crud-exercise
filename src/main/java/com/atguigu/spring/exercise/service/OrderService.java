@@ -3,6 +3,8 @@ package com.atguigu.spring.exercise.service;
 
 import com.atguigu.spring.exercise.bean.Order;
 import com.atguigu.spring.exercise.common.R;
+import com.atguigu.spring.exercise.exception.BizException;
+import com.atguigu.spring.exercise.exception.BizExceptionEnume;
 import com.atguigu.spring.exercise.mapper.OrderMapper;
 import com.atguigu.spring.exercise.vo.req.OrderVo;
 import com.atguigu.spring.exercise.vo.resp.OrderRespVo;
@@ -24,10 +26,12 @@ public class OrderService {
     public R<OrderRespVo> findOrderById(Long id) {
         OrderRespVo order = orderMapper.selectById(id);
         if(order == null) {
-            return R.error(400,"订单不存在",null);
+            throw new BizException((BizExceptionEnume.ORDER_NOT_EXIST));
+           // return R.error(400,"订单不存在",null);
         }
         if(order.getIsDelete() != 0L) {
-            return R.error(403,"订单已被删除",null);
+            throw new BizException((BizExceptionEnume.ORDER_NOT_EXIST));
+            //return R.error(403,"订单已被删除",null);
         }
         return R.ok(order);
     }
